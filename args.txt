@@ -1,0 +1,7 @@
+get - install
+bye - remove
+has - check the servers for package
+what - check if you have a package
+arson - force remove
+fix - update
+setup
