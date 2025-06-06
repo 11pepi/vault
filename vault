@@ -1,11 +1,13 @@
 #! /bin/python
 import argparse
 import windows
+true = True
+false = False
 parser = argparse.ArgumentParser(
     prog="vault",
     formatter_class=argparse.RawTextHelpFormatter
 )
 parser.add_argument("operation", type=str, help="operation you wanna do")
+parser.add_argument("package", type=str, help="the package", required=false)
 args = parser.parse_args()
 
-print(args.operation)
