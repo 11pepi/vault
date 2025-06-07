@@ -6,14 +6,14 @@ def SetupVault(a):
     try:
         with open("/vault/pkglist","x") as f:
             f.write("vault")
-        print("Setup vault!")
+        print("[vault] Completed setup of vault")
     except:
         if not a:
-            print("Please don't run setup multiple times!")
+            print("[vault] Please don't run setup multiple times!")
         else:
-            print("Resetting...")
+            print("[vault] Resetting...")
             os.system("sudo rm -rf /vault")
-            print("Finished!")
+            print("[vault] Finished!")
             SetupVault(False)
 try:
     SetupVault(sys.argv[1] == "reset")
