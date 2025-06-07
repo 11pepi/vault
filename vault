@@ -8,6 +8,5 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter
 )
 parser.add_argument("operation", type=str, help="operation you wanna do")
-parser.add_argument("package", type=str, help="the package", required=false)
+parser.add_argument("package", type=str, help="the package")
 args = parser.parse_args()
-
