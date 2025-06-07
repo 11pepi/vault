@@ -1,12 +1,13 @@
 #! /bin/python
 import argparse
 import windows
-true = True
-false = False
+import os
 parser = argparse.ArgumentParser(
     prog="vault",
     formatter_class=argparse.RawTextHelpFormatter
 )
 parser.add_argument("operation", type=str, help="operation you wanna do")
-parser.add_argument("package", type=str, help="the package")
+parser.add_argument("package", type=str, help="the package", nargs="?")
 args = parser.parse_args()
+if args.operation == "setup":
+    os.system(f"sudo python3 setup.py {args.package}")
