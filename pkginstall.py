@@ -28,8 +28,8 @@ def load_config(path, module_name="config"):
     # Load that module to create it's attributes
     spec.loader.exec_module(module)
 
-    # Give le module oui oui
+    # Donner le module oui oui
     return module
 
 # Change this path to the path of the test C project
-start("/mnt/sda1/vault/example")
+start("./vaults/example/example.sh")
