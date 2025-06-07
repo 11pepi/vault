@@ -7,5 +7,11 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument("operation", type=str, help="operation you wanna do")
 args = parser.parse_args()
-
-print(args.operation)
+if args.operation == "setup":
+    os.system("sudo python3 setup.py")
+if args.operation == "arson":
+    print(f"[arson] Remove {args.package}")
+    os.system(f"rm -rf /vault/{args.package}")
+if args.operation == "get":
+    print(f"[get] Attempt to get {args.package}")
+    

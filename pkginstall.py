@@ -8,7 +8,9 @@ def start(path, config_file_name="config.py"):
 
     config = load_config(config_path)
     print(f"[start] Gathering information from package... config.information()")
-    info = config.information(VaultPKG())
+    pkg = VaultPKG()
+    pkg.package_root = path
+    info = config.information(pkg)
 
     print(f"[start] Ready to begin installation... config.build()")
     package = config.build(info)
