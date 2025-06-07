@@ -1,3 +1,5 @@
 example/
 *.cython
 __pycache__
+vaults/
+vault/

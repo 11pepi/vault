@@ -1,2 +1,0 @@
-vault - a simple package manager
-written in python
