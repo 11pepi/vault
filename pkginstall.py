@@ -30,6 +30,3 @@ def load_config(path, module_name="config"):
 
     # Donner le module oui oui
     return module
-
-# Change this path to the path of the test C project
-start("./vaults/example/example.sh")

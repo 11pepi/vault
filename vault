@@ -2,6 +2,7 @@
 import argparse
 import windows
 import os
+import pkginstall
 parser = argparse.ArgumentParser(
     prog="vault",
     formatter_class=argparse.RawTextHelpFormatter

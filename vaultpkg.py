@@ -7,7 +7,7 @@ class PackagingError(BaseException):
         self.package = package
 
 class VaultPKG:
-    package_root: str = "/mnt/sda1/vault/example"  # Hardcoded for my testing
+    package_root: str = "/home/oscar/Documents/vault/vaults/example/"
     source_dir_name: str = "sources"
     output_dir_name: str = "binaries"
     src_root: str
@@ -46,7 +46,7 @@ class VaultPKG:
             src,
             dest,
             dirs_exist_ok=True
-        )  # fuck
+        )  # unix
         return self
 
     def enter_directory(self, dir):
