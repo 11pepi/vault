@@ -1,32 +1,26 @@
 import importlib.util
 from vaultpkg import VaultPKG
+import pathtracking
 import os
+import util
 
-def start(path, config_file_name="config.py"):
-    print(f"[start] Starting package install for {path}...")
+def preform_build(info, config):
+    package = config.build(info)
+    return package
+
+def start(path, vaults_dir, config_file_name="config.py", paths_file_name="paths.sh"):
+    print(f"[start] Start package install for {path}...")
     config_path = os.path.join(path, config_file_name)
 
-    config = load_config(config_path)
-    print(f"[start] Gathering information from package... config.information()")
-    info = config.information(VaultPKG())
+    config = util.load_config(config_path)
+    print(f"[start] Gather information from package... config.information()")
+    info = util.gather_information(path, config)
 
-    print(f"[start] Ready to begin installation... config.build()")
-    package = config.build(info)
+    print(f"[start] Begin installation... config.build()")
+    build = preform_build(info, config)
 
-def load_config(path, module_name="config"):
-    print(f"[load_config] Generating spec for {path}...")
-    spec = importlib.util.spec_from_file_location(module_name, path)
-    if spec == None:
-        print("[load_config] Invalid spec, does the file exist? Quitting with code 1")
-        quit(1)
+    print(f"[start] Rebuild all paths... rebuild_all_paths()")
+    #paths = pathtracking.rebuild_paths(build, "/mnt/sda1/vault/vaults/example/paths.sh")
+    pathtracking.rebuild_all_paths(os.path.join(vaults_dir, paths_file_name), vaults_dir)
 
-    print(f"[load_config] Exchanging spec for module...")
-    # Create a module from that spec
-    module = importlib.util.module_from_spec(spec)
-
-    print(f"[load_config] Executing module to create attributes...")
-    # Load that module to create it's attributes
-    spec.loader.exec_module(module)
-
-    # Donner le module oui oui
-    return module
+start("/mnt/sda1/vault/vaults/example", "/mnt/sda1/vault/vaults")
