@@ -9,7 +9,23 @@ class PackagingError(BaseException):
 class VaultPKG:
     package_root: str = "/home/oscar/Documents/vault/vaults/example/"
     source_dir_name: str = "sources"
+    def set_source_dir(self, d:str):
+        print(f"[information] Source directory is... {d}")
+        self.source_dir_name = d
+        return self
+
     output_dir_name: str = "binaries"
+    def set_output_dir(self, d:str):
+        print(f"[information] Output directory is... {d}")
+        self.output_dir_name = d
+        return self
+
+    paths_file: str = "paths.sh"
+    def set_paths_filename(self, f:str):
+        print(f"[information] paths.sh script is called {f}")
+        self.paths_file = f
+        return self
+
     src_root: str
     dest_root: str
     name: str
@@ -22,6 +38,12 @@ class VaultPKG:
     def set_version(self, v:str):
         print(f"[information] Version is... {v}")
         self.version = v
+        return self
+
+    paths = []
+    def add_path(self, directory):
+        print(f"[package] Add to path... {directory}")
+        self.paths.append(directory)
         return self
 
     def copy_file(self, src, dest):
@@ -37,7 +59,7 @@ class VaultPKG:
         shutil.move(
             src,
             dest
-        )  # copy2 preserves file metadata
+        )  # sigma sigma boy sigma boy sigma boy
         return self
 
     def copy_directory(self, src, dest):
@@ -80,19 +102,19 @@ class VaultPKG:
 
         print(f"[package] Execute... {cmd}")
         return self
-    
+
     def gnu_make_target(self, targets, num_jobs=os.cpu_count()):
         # DO NOT USE THIS IN PROD, USE SUBPROCESS INSTEAD
         cmd = f"make {targets} -j {num_jobs}"
+        print(f"[package] Build... {cmd}...")
         os.system(cmd)
 
-        print(f"[package] Build... {cmd}...")
         return self
     
     def python(self, src):
+        print(f"[package] Run python code... {src}")
         exec(src, {"self": self, "os": os, "sys": sys})
 
-        print(f"[package] Run python code... {src}")
         return self
 
     def _eval_python(self, src):
@@ -112,14 +134,14 @@ class VaultPKG:
         print(f"[package] Evaluate condition... {condition}")
         if self._eval_python(condition):
             if t == "":
-                print("[package] Skipping empty truthy code...")
+                print("[package] Got truthy. Skipping empty truthy code...")
                 return self
 
             print(f"[package] Execute truthy code... {t}... passing in self")
             return self.python(t)
         else:
             if f == "":
-                print("[package] Skipping empty falsy code...")
+                print("[package] Got falsy. Skipping empty falsy code...")
                 return self
             print(f"[package] Execute falsy code... {f}... passing in self")
             return self.python(f)
