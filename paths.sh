@@ -1,0 +1,1 @@
+source example/paths.sh
