@@ -1,13 +1,23 @@
-from vaultpkg import VaultPKG
+'''
+utilities for the whole program to use
+'''
 import importlib.util
+from vaultpkg import VaultPKG
 
 def gather_information(path, config):
+    '''
+    Gathers information about a given package
+    by calling it's information() method
+    '''
     print(f"[gather_information] Gather package information for... {path}... config.information()")
     pkg = VaultPKG(path)
     info = config.information(pkg)
     return info
 
 def load_config(path, module_name="config"):
+    '''
+    load a config from a given path
+    '''
     print(f"[load_config] Generating spec for {path}...")
     spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None:

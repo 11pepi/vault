@@ -6,6 +6,9 @@ import os
 import util
 
 def do_deletion(_, dest):
+    '''
+    Delete file
+    '''
     print(f"[do_deletion] Try to delete file... {dest}...", end="   ")
     try:
         os.remove(dest)
@@ -14,7 +17,9 @@ def do_deletion(_, dest):
         print(f"Unknown OS error: {e}")
 
 def delete_files(info, _):
-    '''aa'''
+    '''
+    Delete ALL FILES (scary!)
+    '''
     print("[do_deletion] Ready to delete files...")
     for source, dest in info.copies.items():
         do_deletion(source, dest)
