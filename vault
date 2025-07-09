@@ -1,20 +1,101 @@
-#! /bin/python
+#!/bin/python3
+# pylint: disable=import-outside-toplevel
+'''
+The package manager's main executable
+'''
 import argparse
-import windows
-import os
-import pkginstall
-parser = argparse.ArgumentParser(
+import windows  # pylint: disable=unused-import
+
+def add_pkgsource_to_parser(parser):
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--remote", "-r", action="store_true")
+    group.add_argument("--directory", "-d", action="store_true")
+    return group
+
+root_parser = argparse.ArgumentParser(
     prog="vault",
     formatter_class=argparse.RawTextHelpFormatter
 )
-parser.add_argument("operation", type=str, help="operation you wanna do")
-parser.add_argument("package", type=str, help="the package", nargs="?")
-args = parser.parse_args()
-if args.operation == "setup":
-    os.system("sudo python3 setup.py")
-if args.operation == "arson":
-    print(f"[arson] Remove {args.package}")
-    os.system(f"rm -rf /vault/{args.package}")
-if args.operation == "get":
-    print(f"[get] Attempt to get {args.package}")
-    
+root_parser.add_argument("--prefix", default="vaults")
+command_subparsers = root_parser.add_subparsers(dest="operation", required=True)
+
+########## get command
+get_parser = command_subparsers.add_parser("get")
+add_pkgsource_to_parser(get_parser)
+
+## Package is specified after
+get_parser.add_argument("package")
+
+########## bye command
+bye_parser = command_subparsers.add_parser("bye")
+bye_parser.add_argument("package")
+add_pkgsource_to_parser(bye_parser)
+
+########## setup command
+setup_parser = command_subparsers.add_parser("setup")
+
+########## setup command's evil sister arson
+arson_parser = command_subparsers.add_parser("arson")
+
+args = root_parser.parse_args()
+
+def cmd_setup():
+    '''
+    set up the db
+    '''
+    import setup  # os.system is very unsafe!
+    setup.set_up_vault(False)
+
+def cmd_arson():
+    '''
+    arson the whole db
+    '''
+    import setup  # safer
+    setup.set_up_vault(True)  # I think this is what you wanted it to do??
+
+def cmd_get(arguments):
+    '''
+    get a package
+    '''
+    print(f"[get] Attempt to get {arguments.package}")
+    import pkginstall
+    if arguments.directory:
+        pkginstall.start(
+            arguments.package,
+            arguments.prefix
+        )
+    else:
+        operation_not_supported()
+    print("[get] Done (it might've worked, idk)")
+
+def cmd_bye(arguments):
+    '''
+    delete a package
+    '''
+    if arguments.directory:
+        print(f"[bye] Attempt to remove {args.package}")
+        import pkgremove
+        pkgremove.start(
+            arguments.package,
+            arguments.prefix
+        )
+    else:
+        operation_not_supported()
+    print("[bye] Done (it might've worked, idk)")
+
+def operation_not_supported():
+    '''
+    Called when an operation is not supported
+    '''
+    print("[vault] operation not supported.")
+    quit(127)
+
+match args.operation:
+    case "setup": cmd_setup()
+    case "arson": cmd_arson()
+    case "get": cmd_get(args)
+    case "bye": cmd_bye(args)
+    case "fix": operation_not_supported()
+    case "what": operation_not_supported()
+    case "has": operation_not_supported()
+    case "miku": print("Miku, miku, you can call me miku.")
