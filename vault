@@ -4,24 +4,39 @@
 The package manager's main executable
 '''
 import argparse
+import logging
 import windows  # pylint: disable=unused-import
 
 def add_pkgsource_to_parser(parser):
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--remote", "-r", action="store_true")
-    group.add_argument("--directory", "-d", action="store_true")
-    return group
+    '''
+    Add package sources to parser
+    '''
+    #group = parser.add_mutually_exclusive_group(required=True)
+    #group.add_argument("--remote", "-r", action="store_true")
+    #group.add_argument("--directory", "-d", action="store_true")
+    #return group
+    return None
+
+def common_pkg_args(parser):
+    '''
+    A set of common args for operating on packages
+    '''
+    parser.add_argument("--recursive", "-R", action="store_true")
+    return parser
 
 root_parser = argparse.ArgumentParser(
     prog="vault",
     formatter_class=argparse.RawTextHelpFormatter
 )
-root_parser.add_argument("--prefix", default="vaults")
+root_parser.add_argument("--prefix", default="/global/vaultpkgs/db")
+root_parser.add_argument("--loglevel", default="INFO")
+
 command_subparsers = root_parser.add_subparsers(dest="operation", required=True)
 
 ########## get command
 get_parser = command_subparsers.add_parser("get")
 add_pkgsource_to_parser(get_parser)
+common_pkg_args(get_parser)
 
 ## Package is specified after
 get_parser.add_argument("package")
@@ -30,6 +45,7 @@ get_parser.add_argument("package")
 bye_parser = command_subparsers.add_parser("bye")
 bye_parser.add_argument("package")
 add_pkgsource_to_parser(bye_parser)
+common_pkg_args(bye_parser)
 
 ########## setup command
 setup_parser = command_subparsers.add_parser("setup")
@@ -38,6 +54,14 @@ setup_parser = command_subparsers.add_parser("setup")
 arson_parser = command_subparsers.add_parser("arson")
 
 args = root_parser.parse_args()
+
+logging.basicConfig(
+    level=args.loglevel,
+    format="%(asctime)s │ %(name)10.10s │ %(funcName)12.12s │ %(levelname)-6s %(message)s",
+    datefmt="%Y %j @ %H:%m:%S",
+)
+
+log = logging.getLogger(__name__)
 
 def cmd_setup():
     '''
@@ -57,37 +81,39 @@ def cmd_get(arguments):
     '''
     get a package
     '''
-    print(f"[get] Attempt to get {arguments.package}")
+    log.info("Attempt to get %s", arguments.package)
     import pkginstall
     if arguments.directory:
         pkginstall.start(
             arguments.package,
-            arguments.prefix
+            arguments.prefix,
+            recursive=args.recursive
         )
     else:
         operation_not_supported()
-    print("[get] Done (it might've worked, idk)")
+    log.info("Done (it might've worked, idk)")
 
 def cmd_bye(arguments):
     '''
     delete a package
     '''
     if arguments.directory:
-        print(f"[bye] Attempt to remove {args.package}")
+        log.info("Attempt to remove %s", args.package)
         import pkgremove
         pkgremove.start(
             arguments.package,
-            arguments.prefix
+            arguments.prefix,
+            recursive=arguments.recursive
         )
     else:
         operation_not_supported()
-    print("[bye] Done (it might've worked, idk)")
+    log.info("Done (it might've worked, idk)")
 
 def operation_not_supported():
     '''
     Called when an operation is not supported
     '''
-    print("[vault] operation not supported.")
+    log.critical("operation not supported.")
     quit(127)
 
 match args.operation:

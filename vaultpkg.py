@@ -4,6 +4,8 @@ The Vault package class (VaultPKG) is defined here.
 This is passed to config.py files
 '''
 from os import chdir
+import logging
+log = logging.getLogger(__name__)
 
 class VaultPKG:
     '''
@@ -38,7 +40,7 @@ class VaultPKG:
         It's a good thing we overwrite, because you're only meant to call this
         once.
         '''
-        print(f"[information] Name is... {n}")
+        log.debug("Name... %s", n)
         self.name = n
         return self
 
@@ -48,7 +50,7 @@ class VaultPKG:
         It's a good thing we overwrite, because you're only meant to call this
         once.
         '''
-        print(f"[information] Version is... {v}")
+        log.debug("Version... %s", v)
         self.version = v
         return self
 
@@ -56,7 +58,7 @@ class VaultPKG:
         '''
         Appends a dependency to the pkg's dependency list
         '''
-        print(f"[information] Dependency... {d}")
+        log.debug("Dependency... %s", d)
         self.requires.append(d)
         return self
 
@@ -64,6 +66,6 @@ class VaultPKG:
         '''
         Appends a file copy to the package's copies dict.
         '''
-        print(f"[information] File... {src} -> {dest}")
+        log.debug("Needs copy... %s -> %s", src, dest)
         self.copies[src] = dest
         return self

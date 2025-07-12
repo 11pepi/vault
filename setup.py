@@ -9,14 +9,13 @@ def set_up_vault(reset_i_think):
     try:
         with open("/vault/pkglist","x") as f:
             f.write("vault")
-        print("[vault] Completed setup of vault")
     except Exception:
         if not reset_i_think:
-            print("[vault] Please don't run setup multiple times!")
+            print("Please don't run setup multiple times!")
         else:
-            print("[vault] Resetting...")
+            print("Remove... /vault")
             os.system("sudo rm -rf /vault")
-            print("[vault] Finished!")
+            print("Done!")
             set_up_vault(False)
 
 if __name__ == "__main__":  # prevent running this code on module import
