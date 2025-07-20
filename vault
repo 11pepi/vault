@@ -36,10 +36,8 @@ command_subparsers = root_parser.add_subparsers(dest="operation", required=True)
 ########## get command
 get_parser = command_subparsers.add_parser("get")
 add_pkgsource_to_parser(get_parser)
-common_pkg_args(get_parser)
-
-## Package is specified after
 get_parser.add_argument("package")
+common_pkg_args(get_parser)
 
 ########## bye command
 bye_parser = command_subparsers.add_parser("bye")
@@ -47,10 +45,15 @@ bye_parser.add_argument("package")
 add_pkgsource_to_parser(bye_parser)
 common_pkg_args(bye_parser)
 
+########## fix command
+#fix_parser = command_subparsers.add_parser("fix")
+#fix_parser.add_argument("package")
+#common_pkg_args(fix_parser)
+
 ########## setup command
 setup_parser = command_subparsers.add_parser("setup")
 
-########## setup command's evil sister arson
+########## arson, setup command's evil sister
 arson_parser = command_subparsers.add_parser("arson")
 
 args = root_parser.parse_args()
@@ -68,14 +71,14 @@ def cmd_setup():
     set up the db
     '''
     import setup  # os.system is very unsafe!
-    setup.set_up_vault(False)
+    setup.setup()
 
 def cmd_arson():
     '''
     arson the whole db
     '''
     import setup  # safer
-    setup.set_up_vault(True)  # I think this is what you wanted it to do??
+    setup.arson()  # I think this is what you wanted it to do??
 
 def cmd_get(arguments):
     '''
@@ -83,37 +86,29 @@ def cmd_get(arguments):
     '''
     log.info("Attempt to get %s", arguments.package)
     import pkginstall
-    if arguments.directory:
-        pkginstall.start(
-            arguments.package,
-            arguments.prefix,
-            recursive=args.recursive
-        )
-    else:
-        operation_not_supported()
-    log.info("Done (it might've worked, idk)")
+    pkginstall.start(
+        arguments.package,
+        arguments.prefix,
+        recursive=args.recursive
+    )
 
 def cmd_bye(arguments):
     '''
     delete a package
     '''
-    if arguments.directory:
-        log.info("Attempt to remove %s", args.package)
-        import pkgremove
-        pkgremove.start(
-            arguments.package,
-            arguments.prefix,
-            recursive=arguments.recursive
-        )
-    else:
-        operation_not_supported()
-    log.info("Done (it might've worked, idk)")
+    log.info("Attempt to remove %s", args.package)
+    import pkgremove
+    pkgremove.start(
+        arguments.package,
+        arguments.prefix,
+        recursive=arguments.recursive
+    )
 
-def operation_not_supported():
+def operation_not_supported(reason: str = "(no reason given)"):
     '''
     Called when an operation is not supported
     '''
-    log.critical("operation not supported.")
+    log.critical("operation not supported. Reason: %s", reason)
     quit(127)
 
 match args.operation:
@@ -121,7 +116,7 @@ match args.operation:
     case "arson": cmd_arson()
     case "get": cmd_get(args)
     case "bye": cmd_bye(args)
-    case "fix": operation_not_supported()
-    case "what": operation_not_supported()
-    case "has": operation_not_supported()
+    case "fix": cmd_fix(args)
+    case "what": operation_not_supported("what is not yet implemented, but is planned")
+    case "has": operation_not_supported("has is not yet implemented, but is planned")
     case "miku": print("Miku, miku, you can call me miku.")

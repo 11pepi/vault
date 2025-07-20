@@ -3,19 +3,27 @@ handles setting up and removing vault
 '''
 #!/bin/python
 import os
+from shutil import rmtree
 
-def set_up_vault(reset_i_think):
+def setup(dbpath="/global/vault/db"):
     '''
     set up vault for the first time
     '''
     try:
         # safer than system()
-        os.makedirs("/globals/vault/db")
-    except Exception:
-        if not reset_i_think:
-            print("Please don't run setup multiple times!")
-        else:
-            print("Remove... /globals/vault/db")
-            os.system("sudo rm -rf /globals/vault/db")
-            print("Done!")
-            set_up_vault(False)
+        print(f"Create... {dbpath}")
+        os.makedirs(dbpath)
+    except Exception as e:
+        print(f"error {e}")
+
+def arson(dbpath="/global/vault/db"):
+    '''
+    does arson on the DB
+    いめ４４
+    https://www.youtube.com/watch?v=F4REaTQgcXs
+    '''
+    try:
+        print(f"Remove... {dbpath}")
+        rmtree(dbpath)
+    except Exception as e:
+        print(f"error {e}")
