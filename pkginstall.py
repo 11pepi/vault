@@ -51,7 +51,7 @@ def start(path: str, prefix: str, config_file_name="config.py", recursive=False)
     config = util.load_config(config_path)
     info = util.gather_information(path, config)
 
-    build = preform_build(info, config)
+    preform_build(info, config)
 
     copy_files(info, config)
 
@@ -63,6 +63,7 @@ def start(path: str, prefix: str, config_file_name="config.py", recursive=False)
                                 recursive=True)
     else:
         log.info("Skip dependency install... `recursive == False`")
-    return build
 
-#start("/mnt/sda1/vault/vaults/example", "/mnt/sda1/vault/vaults")
+    log.info("Execute postinstall script...")
+    config.endinstall(info)
+

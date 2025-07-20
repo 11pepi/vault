@@ -51,3 +51,6 @@ def start(path, prefix, config_file_name="config.py", recursive=False):
                                 recursive=True)
     else:
         log.debug("Skip dependency install... `recursive == False`")
+
+    log.info("Execute postremoval script...")
+    config.endremoval(config)

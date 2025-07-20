@@ -116,7 +116,7 @@ match args.operation:
     case "arson": cmd_arson()
     case "get": cmd_get(args)
     case "bye": cmd_bye(args)
-    case "fix": cmd_fix(args)
+    #case "fix": cmd_fix(args)
     case "what": operation_not_supported("what is not yet implemented, but is planned")
     case "has": operation_not_supported("has is not yet implemented, but is planned")
     case "miku": print("Miku, miku, you can call me miku.")
