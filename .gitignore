@@ -1,5 +1,5 @@
 example/
 *.cython
-__pycache__
+__pycache__/
 vaults/
 vault/
