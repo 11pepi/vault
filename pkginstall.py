@@ -66,4 +66,3 @@ def start(path: str, prefix: str, config_file_name="config.py", recursive=False)
 
     log.info("Execute postinstall script...")
     config.endinstall(info)
-

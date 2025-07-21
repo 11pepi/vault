@@ -72,7 +72,7 @@ def explain_permission_error(e: PermissionError) -> str:
         case errno.EPERM:
             return "Illegal operation attempted."
         case _:
-            return f"Unknown permission error: {e.strerror}."
+            return f"Shame that all the coolest kids are so misunderstood: {e.strerror}."
 
 def what_depends_on_this_pkg_worker(dep, prefix: str):
     '''
