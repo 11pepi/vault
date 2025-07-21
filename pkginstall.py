@@ -51,10 +51,6 @@ def start(path: str, prefix: str, config_file_name="config.py", recursive=False)
     config = util.load_config(config_path)
     info = util.gather_information(path, config)
 
-    preform_build(info, config)
-
-    copy_files(info, config)
-
     log.info("Install dependencies...")
     if recursive:
         util.for_all_dependencies(info, config, prefix,
@@ -63,6 +59,10 @@ def start(path: str, prefix: str, config_file_name="config.py", recursive=False)
                                 recursive=True)
     else:
         log.info("Skip dependency install... `recursive == False`")
+
+    preform_build(info, config)
+
+    copy_files(info, config)
 
     log.info("Execute postinstall script...")
     config.endinstall(info)
